@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: student-service
+          uri: lb://STUDENT-SERVICE
+          predicates:
+            - Path=/students/**
+        - id: course-service
+          uri: lb://COURSE-SERVICE
+          predicates:
+            - Path=/courses/**
+        - id: enrollment-service
+          uri: lb://ENROLLMENT-SERVICE
+          predicates:
+            - Path=/enrollments/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    registry-fetch-interval-seconds: 5
+  instance:
+    prefer-ip-address: true
